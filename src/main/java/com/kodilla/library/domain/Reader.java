@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Reader {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     @Column(name="idreader")
     private Long idReader;
@@ -29,8 +29,7 @@ public class Reader {
     private String lastNameReader;
 
     @Column(name = "dateofaccountcreation")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private LocalDate dateOfAccountCreation;
+    private String dateOfAccountCreation;
 
 }

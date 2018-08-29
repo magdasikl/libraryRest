@@ -8,25 +8,27 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "BOOK")
-public class Book {
+@Entity(name = "BOOKDESCRIPTION")
+public final class BookDescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @Column(name="idbook")
-    private Long idBook;
+    @Column(name="idtitle")
+    private Long idTitle;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "title")
+    private String title;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "idtitle")
-    private BookDescription idTitle;
+    @Column(name = "author")
+    private String author;
+
+    @Column(name = "yearofpublication")
+    private  Integer yearOfPublication;
+
 
 }

@@ -30,29 +30,11 @@ import java.util.List;
 public class CoreConfiguration implements WebMvcConfigurer {
 
 
-    private static final String NO_TRELLO_PAC = "com.crud.tasks.controller";
-
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
-
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage(NO_TRELLO_PAC))
-                .paths(PathSelectors.any())
-                .build();
-    }
-
-
-//    private Predicate<String> pathse() {
-//        return and(
-//                regex(NO_ERROR_REGEX),
-//                regex(NO_TRELLO_REGEX));
-//    }
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
@@ -84,17 +66,7 @@ public class CoreConfiguration implements WebMvcConfigurer {
 
     }
 
-    @Override
-    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        // Required by Swagger UI configuration
-        registry.addResourceHandler("/lib/**").addResourceLocations("/lib/").setCachePeriod(0);
-        registry.addResourceHandler("/images/**").addResourceLocations("/images/").setCachePeriod(0);
-        registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(0);
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-
-    @Override
+        @Override
     public void addCorsMappings(CorsRegistry registry) {
 
     }

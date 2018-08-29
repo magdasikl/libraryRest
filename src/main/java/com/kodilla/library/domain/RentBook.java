@@ -17,15 +17,13 @@ import java.time.LocalDate;
 public class RentBook {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "idcopyofbook")
-    private CopyOfBook idCopyOfBook;
+    @JoinColumn(name = "book")
+    private Book idBook;
 
     @NotNull
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
