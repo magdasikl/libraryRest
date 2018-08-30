@@ -33,14 +33,22 @@ public class BookDescriptionMapper {
         return new Book(
                 bookDto.getIdBook(),
                 bookDto.getStatus(),
-                bookDto.getIdTitle());
+                mapToBookDescription(bookDto.getDescription()));
     }
 
     public BookDto mapToBookDto(final Book book){
+        BookDescription description = book.getIdTitle();
         return new BookDto(
                 book.getIdBook(),
                 book.getStatus(),
-                book.getIdTitle());
+                mapToBookDescriptionDto(description));
+    }
+
+
+    public List<BookDto> mapToBookDtoList(final List<Book> bookList) {
+        return bookList.stream()
+                .map(this::mapToBookDto)
+                .collect(Collectors.toList());
     }
 
     public Reader mapToReader(final ReaderDto readerDto){

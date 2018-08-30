@@ -25,7 +25,7 @@ public class Book {
     @Column(name = "status")
     private String status;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "idtitle")
     private BookDescription idTitle;
 

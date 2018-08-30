@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -29,6 +30,5 @@ public final class BookDescription {
 
     @Column(name = "yearofpublication")
     private  Integer yearOfPublication;
-
 
 }

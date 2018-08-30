@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class BookDto {
     private Long idBook;
     private String status;
-    private BookDescription idTitle;
+    private BookDescriptionDto description;
 }

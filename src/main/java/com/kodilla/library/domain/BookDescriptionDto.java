@@ -11,5 +11,5 @@ public class BookDescriptionDto {
     private Long idTitle;
     private String title;
     private String author;
-    private  Integer yearOfPublication;
+    private Integer yearOfPublication;
 }
