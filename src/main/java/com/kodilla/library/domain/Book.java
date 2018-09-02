@@ -23,7 +23,8 @@ public class Book {
     private Long idBook;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated( EnumType.STRING )
+    private StatusBookDesc status;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "idtitle")

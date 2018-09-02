@@ -31,4 +31,7 @@ public final class BookDescription {
     @Column(name = "yearofpublication")
     private  Integer yearOfPublication;
 
+    public BookDescription(Long idTitle) {
+        this.idTitle = idTitle;
+    }
 }

@@ -2,6 +2,7 @@ package com.kodilla.library.repository;
 
 import com.kodilla.library.domain.Book;
 import com.kodilla.library.domain.BookDescription;
+import com.kodilla.library.domain.StatusBookDesc;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 
     BookDescription save(BookDescription description);
 
-    List<Book> findBooksByIdTitleAndStatus(BookDescription idTitle, String status);
+    List<Book> findBooksByIdTitleAndStatus(BookDescription idTitle, StatusBookDesc status);
 
-     long countBooksByStatusAndIdTitle (String status, BookDescription idTitle);
+    long countBooksByIdTitleAndStatus(BookDescription idTitle, StatusBookDesc status);
 
 }

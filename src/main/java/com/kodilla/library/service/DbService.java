@@ -1,9 +1,6 @@
 package com.kodilla.library.service;
 
-import com.kodilla.library.domain.Book;
-import com.kodilla.library.domain.BookDescription;
-import com.kodilla.library.domain.Reader;
-import com.kodilla.library.domain.RentBook;
+import com.kodilla.library.domain.*;
 import com.kodilla.library.repository.BookDescriptionRepository;
 import com.kodilla.library.repository.BookRepository;
 import com.kodilla.library.repository.ReaderRepository;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class DbService {
     @Autowired
@@ -30,7 +28,7 @@ public class DbService {
         return descriptionRepository.findAll();
     }
 
-    public BookDescription saveBookDescription(final BookDescription description){
+    public BookDescription saveBookDescription(final BookDescription description) {
         return descriptionRepository.save(description);
     }
 
@@ -38,21 +36,16 @@ public class DbService {
         return readerRepository.save(reader);
     }
 
-    public Book saveBook(final Book book){
+    public Book saveBook(final Book book) {
         return bookRepository.save(book);
     }
 
-    public List<Book> findBooksByIdTitleAndStatus(final BookDescription idTitle, final String status ){
-        return bookRepository.findBooksByIdTitleAndStatus(idTitle,status);
+    public List<Book> findBooksByIdTitleAndStatus(final BookDescription description, final StatusBookDesc status) {
+        return bookRepository.findBooksByIdTitleAndStatus(description, status);
     }
 
-//    public BookDescription countBooksByTitle (final String title) {
-//        return bookRepository.countBooksByTitle(title);
-//    }
-
-    public long countBooksByStatusAndIdTitle(final String status, final BookDescription idTitle) {
-        return bookRepository.countBooksByStatusAndIdTitle(status, idTitle);
-
+    public long countBooksByStatusAndIdTitle(final BookDescription description, final StatusBookDesc status) {
+        return bookRepository.countBooksByIdTitleAndStatus(description, status);
     }
 
     public RentBook saveRentBook(final RentBook rentBook) {
