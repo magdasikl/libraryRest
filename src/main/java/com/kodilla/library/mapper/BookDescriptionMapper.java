@@ -68,20 +68,20 @@ public class BookDescriptionMapper {
     }
 
 
-    public RentBook mapToRentBook(final RentBokDto rentBokDto){
+    public RentBook mapToRentBook(final RentBookDto rentBookDto){
         return new RentBook(
-                rentBokDto.getId(),
-                rentBokDto.getIdBook(),
-                rentBokDto.getIdReader(),
-                rentBokDto.getDateOfRent(),
-                rentBokDto.getDateOfReturn());
+                rentBookDto.getId(),
+                mapToBook(rentBookDto.getIdBook()),
+                mapToReader(rentBookDto.getIdReader()),
+                rentBookDto.getDateOfRent(),
+                rentBookDto.getDateOfReturn());
     }
 
-    public RentBokDto mapToRentBokDto(final RentBook rentBook) {
-        return new RentBokDto(
+    public RentBookDto mapToRentBookDto(final RentBook rentBook) {
+        return new RentBookDto(
                 rentBook.getId(),
-                rentBook.getIdBook(),
-                rentBook.getIdReader(),
+                mapToBookDto(rentBook.getIdBook()),
+                mapToReaderDto(rentBook.getIdReader()),
                 rentBook.getDateOfRent(),
                 rentBook.getDateOfReturn());
     }

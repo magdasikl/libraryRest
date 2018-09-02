@@ -16,20 +16,16 @@ public class Reader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Column(name="idreader")
     private Long idReader;
 
     @Column(name = "firstnamereader")
-    @NotNull
     private String firstNameReader;
 
     @Column(name = "lastnamereader")
-    @NotNull
     private String lastNameReader;
 
     @Column(name = "dateofaccountcreation")
-    @NotNull
     private String dateOfAccountCreation;
 
 }

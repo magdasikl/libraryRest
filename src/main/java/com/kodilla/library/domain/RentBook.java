@@ -21,20 +21,20 @@ public class RentBook {
     private Long id;
 
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "book")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idbook")
     private Book idBook;
 
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="idreader")
     private Reader idReader;
 
     @Column(name = "dateofrent")
     @NotNull
-    private LocalDate dateOfRent;
+    private String dateOfRent;
 
     @Column(name = "dateofreturn")
     @NotNull
-    private LocalDate dateOfReturn;
+    private String dateOfReturn;
 }

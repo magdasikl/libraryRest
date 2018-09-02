@@ -2,12 +2,10 @@ package com.kodilla.library.controller;
 
 import com.google.gson.*;
 import com.kodilla.library.domain.*;
-import com.kodilla.library.config.*;
 import com.kodilla.library.mapper.BookDescriptionMapper;
 import com.kodilla.library.service.DbService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,15 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
-import javax.swing.text.StyledEditorKit;
-import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -50,7 +39,7 @@ public class LibraryControllerTest {
     BookDescriptionMapper descriptionMapper;
 
     @Test
-    public void testgetBookDescription() throws Exception {
+    public void testGetBookDescription() throws Exception {
         //given
         List<BookDescription> descriptionList = new ArrayList<>();
         descriptionList.add(new BookDescription(0L,"książka nr 1","autor 1",2018));
@@ -73,7 +62,7 @@ public class LibraryControllerTest {
     }
 
     @Test
-    public void testcreateBookDescription() throws Exception {
+    public void testCreateBookDescription() throws Exception {
         //given
         BookDescriptionDto descriptionDto = new BookDescriptionDto(0L,"książka nr 2","autor 2", 2018);
         BookDescription description = new BookDescription(0L,"książka nr 2","autor 2", 2018);
@@ -97,7 +86,7 @@ public class LibraryControllerTest {
     }
 
     @Test
-    public void testcreateReader() throws Exception {
+    public void testCreateReader() throws Exception {
         //given
         Reader reader = new Reader(0L,"name 1","last name 1","1975-07-12");
         ReaderDto readerDto = new ReaderDto(0L,"name 1","last name 1","1975-07-12");
@@ -121,7 +110,7 @@ public class LibraryControllerTest {
     }
 
     @Test
-    public void testcreateBook() throws Exception{
+    public void testCreateBook() throws Exception{
         //given
         BookDescription description = new BookDescription(1L,"Title 1", "Author 1",2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L,"Title 1", "Author 1",2009);
@@ -165,7 +154,7 @@ public class LibraryControllerTest {
         when(service.findBooksByIdTitleAndStatus(ArgumentMatchers.any(BookDescription.class),ArgumentMatchers.any(String.class))).thenReturn(bookList);
         when(descriptionMapper.mapToBookDtoList(bookList)).thenReturn(bookDtoList);
 
-        //when then
+        //when & then
         mockMvc.perform(get("/library/getBooks")
                 .param("idTitle","1")
                 .param("status","w obiegu")
@@ -177,7 +166,7 @@ public class LibraryControllerTest {
     }
 
     @Test
-    public void testupdateStatusBook() throws Exception{
+    public void testUpdateStatusBook() throws Exception{
         //given
         BookDescription description = new BookDescription(1L,"Title 1", "Author 1",2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L,"Title 1", "Author 1",2009);
@@ -195,7 +184,7 @@ public class LibraryControllerTest {
         String jsonContent = gson.toJson(bookDto);
 
 
-        //when then
+        //when & then
         mockMvc.perform(put("/library/updateStatusBook")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -203,5 +192,82 @@ public class LibraryControllerTest {
                 .andExpect(jsonPath("$.idBook",is(0)))
                 .andExpect(jsonPath("$.status", is(StatusBookDesc.Circulation.getStatus())));
     }
+
+    @Test
+    public void testGetcountBooks() throws Exception {
+        //given
+        BookDescription description = new BookDescription(1L,"Title 1", "Author 1",2009);
+        BookDescriptionDto descriptionDto = new BookDescriptionDto(1L,"Title 1", "Author 1",2009);
+        Book book = new Book(0L, StatusBookDesc.Circulation.getStatus(), description);
+        BookDto bookDto = new BookDto(0L, StatusBookDesc.Circulation.getStatus(), descriptionDto);
+
+        when(service.countBooksByStatusAndIdTitle(ArgumentMatchers.any(String.class),ArgumentMatchers.any(BookDescription.class))).thenReturn(3L);
+        //when & then
+        mockMvc.perform(get("/library/getcountBooks")
+                .param("status","w obiegu")
+                .param("idTitle","1L")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8"))
+                .andExpect(status().isOk());
+
+
+
+    }
+
+    @Test
+    public void testCreateRentBook() throws  Exception{
+        BookDescription description = new BookDescription(1L,"Title 1", "Author 1",2009);
+        BookDescriptionDto descriptionDto = new BookDescriptionDto(1L,"Title 1", "Author 1",2009);
+
+        RentBook rentBook = new RentBook(1L,new Book(0L, StatusBookDesc.Circulation.getStatus(), description), new Reader(0L,"name 1","last name 1","1975-07-12"), "2018-08-20","");
+        RentBookDto rentBookDto = new RentBookDto(1L,new BookDto(1L, StatusBookDesc.Circulation.getStatus(), descriptionDto), new ReaderDto(1L,"name 1","last name 1","1975-07-12"), "2018-08-20","");
+
+        when(descriptionMapper.mapToRentBook(ArgumentMatchers.any(RentBookDto.class))).thenReturn(rentBook);
+        when(service.saveRentBook(rentBook)).thenReturn(rentBook);
+        when(descriptionMapper.mapToRentBookDto(rentBook)).thenReturn(rentBookDto);
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(rentBookDto);
+
+        //when & then
+        mockMvc.perform(post("/library/createRentBook")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                    .andExpect(jsonPath("$.id", is(1)))
+                    .andExpect(jsonPath("$.idBook.idBook",is(1)))
+                    .andExpect(jsonPath("$.idReader.idReader", is(1)))
+                    .andExpect(jsonPath("$.dateOfRent", is("2018-08-20")))
+                    .andExpect(jsonPath("$.dateOfReturn", is("")));
+
+    }
+
+    @Test
+    public void TestUpdateRentBook() throws Exception{
+        BookDescription description = new BookDescription(1L,"Title 1", "Author 1",2009);
+        BookDescriptionDto descriptionDto = new BookDescriptionDto(1L,"Title 1", "Author 1",2009);
+
+        RentBook rentBook = new RentBook(1L,new Book(0L, StatusBookDesc.Circulation.getStatus(), description), new Reader(0L,"name 1","last name 1","1975-07-12"), "2018-08-20","");
+        RentBookDto rentBookDto = new RentBookDto(1L,new BookDto(1L, StatusBookDesc.Circulation.getStatus(), descriptionDto), new ReaderDto(1L,"name 1","last name 1","1975-07-12"), "2018-08-20","");
+
+
+        when(descriptionMapper.mapToRentBook(ArgumentMatchers.any(RentBookDto.class))).thenReturn(rentBook);
+        when(service.saveRentBook(rentBook)).thenReturn(rentBook);
+        when(descriptionMapper.mapToRentBookDto(rentBook)).thenReturn(rentBookDto);
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(rentBookDto);
+
+        //when & then
+        mockMvc.perform(put("/library/updateRentBook")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.idBook.idBook",is(1)))
+                .andExpect(jsonPath("$.idReader.idReader", is(1)))
+                .andExpect(jsonPath("$.dateOfRent", is("2018-08-20")))
+                .andExpect(jsonPath("$.dateOfReturn",is("")));
+    }
+
+
 
 }

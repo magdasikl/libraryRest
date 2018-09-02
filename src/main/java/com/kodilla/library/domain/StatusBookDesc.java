@@ -1,5 +1,11 @@
 package com.kodilla.library.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
+
+
+
 public enum StatusBookDesc {
     Circulation("w obiegu"),
     Destroyed("zniszczona"),
@@ -12,6 +18,8 @@ public enum StatusBookDesc {
     }
 
     public String getStatus(){
-    return status;
+        return status;
     }
+
+
 }

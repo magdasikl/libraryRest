@@ -12,7 +12,8 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 
     BookDescription save(BookDescription description);
 
-
-
     List<Book> findBooksByIdTitleAndStatus(BookDescription idTitle, String status);
+
+     long countBooksByStatusAndIdTitle (String status, BookDescription idTitle);
+
 }
