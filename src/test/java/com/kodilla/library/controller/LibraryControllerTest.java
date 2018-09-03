@@ -6,6 +6,7 @@ import com.kodilla.library.mapper.BookDescriptionMapper;
 import com.kodilla.library.service.DbService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -171,26 +172,24 @@ public class LibraryControllerTest {
         BookDescription description = new BookDescription(1L, "Title 1", "Author 1", 2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L, "Title 1", "Author 1", 2009);
         Book book = new Book(0L, StatusBookDesc.Circulation, description);
-        BookDto bookDto = new BookDto(0L, StatusBookDesc.Circulation, descriptionDto);
+        BookDto bookDto = new BookDto(0L, StatusBookDesc.Lost, descriptionDto);
         List<Book> bookList = new ArrayList<>();
         bookList.add(book);
         List<BookDto> bookDtoList = new ArrayList<>();
         bookDtoList.add(bookDto);
-
+        when(service.findBookByIdBook(ArgumentMatchers.any(Long.class))).thenReturn(book);
         when(descriptionMapper.mapToBook(ArgumentMatchers.any(BookDto.class))).thenReturn(book);
         when(service.saveBook(book)).thenReturn(book);
         when(descriptionMapper.mapToBookDto(book)).thenReturn(bookDto);
-        Gson gson = new Gson();
-        String jsonContent = gson.toJson(bookDto);
 
 
         //when & then
         mockMvc.perform(put("/library/updateStatusBook")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(jsonContent))
-                .andExpect(jsonPath("$.idBook", is(0)))
-                .andExpect(jsonPath("$.status", is(StatusBookDesc.Circulation.name())));
+                .param("idBook","1")
+                .param("status","Lost")
+                .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.idBook", is(0)))
+                    .andExpect(jsonPath("$.status", is(StatusBookDesc.Lost.name())));
     }
 
     @Test

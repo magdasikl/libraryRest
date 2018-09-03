@@ -49,8 +49,10 @@ public class LibraryController {
         return descriptionMapper.mapToBookDtoList(bookList);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "updateStatusBook", consumes = APPLICATION_JSON_VALUE)
-    public BookDto updateStatusBook(@RequestBody BookDto bookDto) {
+    @RequestMapping(method = RequestMethod.PUT, value = "updateStatusBook")
+    public BookDto updateStatusBook(@RequestParam long idBook, @RequestParam StatusBookDesc status) {
+        BookDto bookDto = descriptionMapper.mapToBookDto(service.findBookByIdBook(idBook));
+        bookDto.setStatus(status);
         Book book = service.saveBook(descriptionMapper.mapToBook(bookDto));
         return descriptionMapper.mapToBookDto(book);
     }

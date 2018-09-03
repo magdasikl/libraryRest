@@ -44,6 +44,10 @@ public class DbService {
         return bookRepository.findBooksByIdTitleAndStatus(description, status);
     }
 
+    public Book findBookByIdBook (long idBook){
+        return bookRepository.findBookByIdBook(idBook);
+    }
+
     public long countBooksByStatusAndIdTitle(final BookDescription description, final StatusBookDesc status) {
         return bookRepository.countBooksByIdTitleAndStatus(description, status);
     }
