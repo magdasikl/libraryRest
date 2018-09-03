@@ -35,6 +35,5 @@ public class RentBook {
     private String dateOfRent;
 
     @Column(name = "dateofreturn")
-    @NotNull
     private String dateOfReturn;
 }

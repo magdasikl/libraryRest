@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.kodilla.library.domain.StatusBookDesc.Circulation;
+import static com.kodilla.library.domain.StatusBookDesc.Rented;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -58,18 +60,29 @@ public class LibraryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getcountBooks")
-    public long getcountBooks(@RequestParam StatusBookDesc status, @RequestParam Long idTitle) {
-        return service.countBooksByStatusAndIdTitle(new BookDescription(idTitle), status);
+    public long getcountBooks(@RequestParam StatusBookDesc status, @RequestParam String title) {
+      //  return service.countBooksByStatusAndIdTitle(new BookDescription(title), status);
+        return service.countBooksByIdTitle_TitleAndStatus(title, status);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createRentBook", consumes = APPLICATION_JSON_VALUE)
     public RentBookDto createRentBook(@RequestBody RentBookDto rentBookDto) {
-        RentBook rentBook = service.saveRentBook(descriptionMapper.mapToRentBook(rentBookDto));
-        return descriptionMapper.mapToRentBookDto(rentBook);
+        BookDto bookDto2 = descriptionMapper.mapToBookDto(service.findBookByIdBook(rentBookDto.getIdBook().getIdBook()));
+        if (bookDto2.getStatus().equals(Circulation)){
+            RentBook rentBook = service.saveRentBook(descriptionMapper.mapToRentBook(rentBookDto));
+            BookDto bookDto = descriptionMapper.mapToBookDto(service.findBookByIdBook(rentBook.getIdBook().getIdBook()));
+            bookDto.setStatus(Rented);
+            service.saveBook(descriptionMapper.mapToBook(bookDto));
+
+            return descriptionMapper.mapToRentBookDto(rentBook);
+        }else {
+            return null;
+        }
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateRentBook", consumes = APPLICATION_JSON_VALUE)
     public RentBookDto updateRentBook(@RequestBody RentBookDto rentBookDto) {
+        service.saveBook(descriptionMapper.mapToBook(rentBookDto.getIdBook()));
         RentBook rentBook = service.saveRentBook(descriptionMapper.mapToRentBook(rentBookDto));
         return descriptionMapper.mapToRentBookDto(rentBook);
     }

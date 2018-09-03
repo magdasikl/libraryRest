@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kodilla.library.domain.StatusBookDesc.Circulation;
+import static com.kodilla.library.domain.StatusBookDesc.Lost;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -115,8 +117,8 @@ public class LibraryControllerTest {
         //given
         BookDescription description = new BookDescription(1L, "Title 1", "Author 1", 2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L, "Title 1", "Author 1", 2009);
-        Book book = new Book(0L, StatusBookDesc.Circulation, description);
-        BookDto bookDto = new BookDto(0L, StatusBookDesc.Circulation, descriptionDto);
+        Book book = new Book(0L, Circulation, description);
+        BookDto bookDto = new BookDto(0L, Circulation, descriptionDto);
         List<Book> bookList = new ArrayList<>();
         bookList.add(book);
         List<BookDto> bookDtoList = new ArrayList<>();
@@ -135,7 +137,7 @@ public class LibraryControllerTest {
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(jsonPath("$.idBook", is(0)))
-                .andExpect(jsonPath("$.status", is(StatusBookDesc.Circulation.name())));
+                .andExpect(jsonPath("$.status", is(Circulation.name())));
     }
 
     @Test
@@ -143,8 +145,8 @@ public class LibraryControllerTest {
         BookDescription description = new BookDescription(1L, "Title 1", "Author 1", 2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L, "Title 1", "Author 1", 2009);
 
-        Book book = new Book(0L, StatusBookDesc.Circulation, description);
-        BookDto bookDto = new BookDto(0L, StatusBookDesc.Circulation, descriptionDto);
+        Book book = new Book(0L, Circulation, description);
+        BookDto bookDto = new BookDto(0L, Circulation, descriptionDto);
 
         List<Book> bookList = new ArrayList<>();
         bookList.add(book);
@@ -158,12 +160,12 @@ public class LibraryControllerTest {
         //when & then
         mockMvc.perform(get("/library/getBooks")
                 .param("idTitle", "1")
-                .param("status", StatusBookDesc.Circulation.name())
+                .param("status", Circulation.name())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].idBook", is(0)))
-                .andExpect(jsonPath("$[0].status", is(StatusBookDesc.Circulation.name())));
+                .andExpect(jsonPath("$[0].status", is(Circulation.name())));
     }
 
     @Test
@@ -171,12 +173,9 @@ public class LibraryControllerTest {
         //given
         BookDescription description = new BookDescription(1L, "Title 1", "Author 1", 2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L, "Title 1", "Author 1", 2009);
-        Book book = new Book(0L, StatusBookDesc.Circulation, description);
-        BookDto bookDto = new BookDto(0L, StatusBookDesc.Lost, descriptionDto);
-        List<Book> bookList = new ArrayList<>();
-        bookList.add(book);
-        List<BookDto> bookDtoList = new ArrayList<>();
-        bookDtoList.add(bookDto);
+        Book book = new Book(0L, Circulation, description);
+        BookDto bookDto = new BookDto(0L, Lost, descriptionDto);
+
         when(service.findBookByIdBook(ArgumentMatchers.any(Long.class))).thenReturn(book);
         when(descriptionMapper.mapToBook(ArgumentMatchers.any(BookDto.class))).thenReturn(book);
         when(service.saveBook(book)).thenReturn(book);
@@ -189,7 +188,7 @@ public class LibraryControllerTest {
                 .param("status","Lost")
                 .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.idBook", is(0)))
-                    .andExpect(jsonPath("$.status", is(StatusBookDesc.Lost.name())));
+                    .andExpect(jsonPath("$.status", is(Lost.name())));
     }
 
     @Test
@@ -197,14 +196,14 @@ public class LibraryControllerTest {
         //given
         BookDescription description = new BookDescription(1L, "Title 1", "Author 1", 2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L, "Title 1", "Author 1", 2009);
-        Book book = new Book(0L, StatusBookDesc.Circulation, description);
-        BookDto bookDto = new BookDto(0L, StatusBookDesc.Circulation, descriptionDto);
+        Book book = new Book(0L, Circulation, description);
+        BookDto bookDto = new BookDto(0L, Circulation, descriptionDto);
 
-        when(service.countBooksByStatusAndIdTitle(ArgumentMatchers.any(BookDescription.class), ArgumentMatchers.any(StatusBookDesc.class))).thenReturn(3L);
+        when(service.countBooksByIdTitle_TitleAndStatus(ArgumentMatchers.any(String.class), ArgumentMatchers.any(StatusBookDesc.class))).thenReturn(3L);
         //when & then
         mockMvc.perform(get("/library/getcountBooks")
-                .param("status", StatusBookDesc.Circulation.name())
-                .param("idTitle", "1")
+                .param("status", Circulation.name())
+                .param("title", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk());
@@ -215,9 +214,13 @@ public class LibraryControllerTest {
         BookDescription description = new BookDescription(1L, "Title 1", "Author 1", 2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L, "Title 1", "Author 1", 2009);
 
-        RentBook rentBook = new RentBook(1L, new Book(0L, StatusBookDesc.Circulation, description), new Reader(0L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
-        RentBookDto rentBookDto = new RentBookDto(1L, new BookDto(1L, StatusBookDesc.Circulation, descriptionDto), new ReaderDto(1L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
+        RentBook rentBook = new RentBook(1L, new Book(0L, Circulation, description), new Reader(0L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
+        RentBookDto rentBookDto = new RentBookDto(1L, new BookDto(1L, Circulation, descriptionDto), new ReaderDto(1L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
+        Book book = new Book(0L, Circulation, description);
+        BookDto bookDto = new BookDto(0L, Circulation, descriptionDto);
 
+        when(service.findBookByIdBook(ArgumentMatchers.any(Long.class))).thenReturn(book);
+        when(descriptionMapper.mapToBookDto(book)).thenReturn(bookDto);
         when(descriptionMapper.mapToRentBook(ArgumentMatchers.any(RentBookDto.class))).thenReturn(rentBook);
         when(service.saveRentBook(rentBook)).thenReturn(rentBook);
         when(descriptionMapper.mapToRentBookDto(rentBook)).thenReturn(rentBookDto);
@@ -229,11 +232,11 @@ public class LibraryControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.idBook.idBook", is(1)))
-                .andExpect(jsonPath("$.idReader.idReader", is(1)))
-                .andExpect(jsonPath("$.dateOfRent", is("2018-08-20")))
-                .andExpect(jsonPath("$.dateOfReturn", is("")));
+                    .andExpect(jsonPath("$.id", is(1)))
+                    .andExpect(jsonPath("$.idBook.idBook", is(1)))
+                    .andExpect(jsonPath("$.idReader.idReader", is(1)))
+                    .andExpect(jsonPath("$.dateOfRent", is("2018-08-20")))
+                    .andExpect(jsonPath("$.dateOfReturn", is("")));
 
     }
 
@@ -242,10 +245,14 @@ public class LibraryControllerTest {
         BookDescription description = new BookDescription(1L, "Title 1", "Author 1", 2009);
         BookDescriptionDto descriptionDto = new BookDescriptionDto(1L, "Title 1", "Author 1", 2009);
 
-        RentBook rentBook = new RentBook(1L, new Book(0L, StatusBookDesc.Circulation, description), new Reader(0L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
-        RentBookDto rentBookDto = new RentBookDto(1L, new BookDto(1L, StatusBookDesc.Circulation, descriptionDto), new ReaderDto(1L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
+        RentBook rentBook = new RentBook(1L, new Book(0L, Circulation, description), new Reader(0L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
+        RentBookDto rentBookDto = new RentBookDto(1L, new BookDto(1L, Circulation, descriptionDto), new ReaderDto(1L, "name 1", "last name 1", "1975-07-12"), "2018-08-20", "");
+
+        Book book = new Book(0L, Circulation, description);
 
 
+
+        when(service.saveBook(ArgumentMatchers.any(Book.class))).thenReturn(book);
         when(descriptionMapper.mapToRentBook(ArgumentMatchers.any(RentBookDto.class))).thenReturn(rentBook);
         when(service.saveRentBook(rentBook)).thenReturn(rentBook);
         when(descriptionMapper.mapToRentBookDto(rentBook)).thenReturn(rentBookDto);

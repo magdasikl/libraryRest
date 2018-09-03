@@ -48,8 +48,8 @@ public class DbService {
         return bookRepository.findBookByIdBook(idBook);
     }
 
-    public long countBooksByStatusAndIdTitle(final BookDescription description, final StatusBookDesc status) {
-        return bookRepository.countBooksByIdTitleAndStatus(description, status);
+    public long countBooksByIdTitle_TitleAndStatus(final String description, final StatusBookDesc status) {
+        return bookRepository.countBooksByIdTitle_TitleAndStatus(description, status);
     }
 
     public RentBook saveRentBook(final RentBook rentBook) {

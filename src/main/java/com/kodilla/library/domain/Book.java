@@ -26,7 +26,7 @@ public class Book {
     @Enumerated( EnumType.STRING )
     private StatusBookDesc status;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "idtitle")
     private BookDescription idTitle;
 
